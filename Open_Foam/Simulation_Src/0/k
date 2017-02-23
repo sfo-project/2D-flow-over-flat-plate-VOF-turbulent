@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 0.0006;//was 0.05
+
+boundaryField
+{
+    plate_wall
+    {
+        type            kqRWallFunction;
+        value           $internalField;                     //was uniform 0.05;
+    }
+    bottom
+    {
+        type            kqRWallFunction;
+        value           $internalField;                     //was uniform 0.05;
+    }
+    /*
+    inlet
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        value           uniform 0.05;
+	intensity	0.0292638;
+    }
+
+   */
+
+    inlet
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+
+/*
+    outlet
+    {
+        type            zeroGradient;
+    }
+*/
+
+    outlet
+    {
+       type            inletOutlet;
+       inletValue      $internalField;
+       value           $internalField;
+    }
+
+    top
+    {
+	type		symmetry;
+    }
+    frontAndBackPlanes
+    {
+        type            empty;
+    }
+}
+
+
+// ************************************************************************* //
